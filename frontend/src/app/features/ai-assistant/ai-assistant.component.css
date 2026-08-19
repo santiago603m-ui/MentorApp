@@ -1,0 +1,203 @@
+.bot {
+  display: flex;
+  flex-direction: column;
+  height: clamp(440px, 68vh, 680px);
+  overflow: hidden;
+}
+
+/* ===== Encabezado ===== */
+.bot__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  padding: var(--s-4) var(--s-5);
+  border-bottom: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.bot__id {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.bot__dots {
+  display: flex;
+  gap: 6px;
+}
+
+.bot__dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.bot__title {
+  font-size: var(--fs-md);
+  margin: 0;
+}
+
+.bot__status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--cyan-300);
+  margin: 2px 0 0;
+}
+
+/* ===== Conversación ===== */
+.bot__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  overscroll-behavior: contain;
+}
+
+.bot-msg {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.bot-msg--mine {
+  justify-content: flex-end;
+}
+
+.bot-msg__bubble {
+  max-width: min(86%, 560px);
+  padding: 11px 15px;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--glass-border);
+}
+
+.bot-msg--mine .bot-msg__bubble {
+  background: linear-gradient(135deg, rgba(62, 214, 240, 0.16), rgba(44, 123, 229, 0.18));
+  border-color: rgba(62, 214, 240, 0.32);
+}
+
+.bot-msg__author {
+  display: block;
+  margin-bottom: 5px;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--cyan-300);
+}
+
+.bot-msg--mine .bot-msg__author {
+  color: var(--cyan-400);
+}
+
+.bot-msg__body {
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+/* ===== Markdown renderizado por el pipe =====
+   Usa ::ng-deep porque el HTML llega vía [innerHTML] y
+   no lleva los atributos de encapsulación del componente. */
+.bot-msg__body ::ng-deep p {
+  margin: 0 0 var(--s-2);
+  color: inherit;
+}
+
+.bot-msg__body ::ng-deep p:last-child {
+  margin-bottom: 0;
+}
+
+.bot-msg__body ::ng-deep strong {
+  color: var(--cyan-300);
+  font-weight: var(--fw-semibold);
+}
+
+.bot-msg__body ::ng-deep a {
+  color: var(--cyan-300);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.bot-msg__body ::ng-deep code {
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(5, 6, 10, 0.6);
+  border: 1px solid var(--glass-border);
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.88em;
+  color: var(--cyan-300);
+}
+
+.bot-msg__body ::ng-deep pre {
+  margin: var(--s-3) 0;
+  padding: var(--s-4);
+  border-radius: var(--r-sm);
+  background: rgba(5, 6, 10, 0.7);
+  border: 1px solid var(--glass-border);
+  overflow-x: auto;
+}
+
+.bot-msg__body ::ng-deep pre code {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text-1);
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+.bot-msg__body ::ng-deep ul,
+.bot-msg__body ::ng-deep ol {
+  margin: 0 0 var(--s-2);
+  padding-left: var(--s-5);
+  list-style: revert;
+}
+
+.bot-msg__body ::ng-deep li {
+  margin-bottom: 4px;
+}
+
+.bot-msg__body ::ng-deep h1,
+.bot-msg__body ::ng-deep h2,
+.bot-msg__body ::ng-deep h3,
+.bot-msg__body ::ng-deep h4 {
+  font-size: var(--fs-md);
+  margin: var(--s-3) 0 var(--s-2);
+  color: var(--text-1);
+}
+
+/* ===== Composer ===== */
+.bot__composer {
+  display: flex;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-5);
+  border-top: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.bot__composer .input {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .bot__head,
+  .bot__scroll,
+  .bot__composer {
+    padding-inline: var(--s-4);
+  }
+
+  .bot-msg__bubble {
+    max-width: 92%;
+  }
+}

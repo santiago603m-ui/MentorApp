@@ -1,0 +1,151 @@
+<div class="page">
+  <div class="container">
+
+    <!-- Encabezado -->
+    <header class="list-head anim-up">
+      <span class="kicker">Catálogo</span>
+      <h1>Explora cursos</h1>
+      <p>Aprende desarrollo de software con mentores expertos y clases en vivo.</p>
+    </header>
+
+    <!-- Filtros -->
+    <section class="glass filters anim-up anim-d1" aria-label="Filtros de búsqueda">
+      <div class="filters__grid">
+        <div class="field">
+          <label class="label" for="f-search">Buscar</label>
+          <input
+            id="f-search"
+            type="search"
+            class="input"
+            placeholder="Nombre del curso…"
+            [(ngModel)]="filters.search"
+            (keyup.enter)="searchCourses()"
+          />
+        </div>
+
+        <div class="field">
+          <label class="label" for="f-category">Categoría</label>
+          <select id="f-category" class="select" [(ngModel)]="filters.category" (change)="searchCourses()">
+            <option value="">Todas</option>
+            <option *ngFor="let c of categories" [value]="c.value">{{ c.label }}</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="f-level">Nivel</label>
+          <select id="f-level" class="select" [(ngModel)]="filters.level" (change)="searchCourses()">
+            <option value="">Todos</option>
+            <option *ngFor="let l of levels" [value]="l.value">{{ l.label }}</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="label" for="f-sort">Ordenar por</label>
+          <select id="f-sort" class="select" [(ngModel)]="filters.sort" (change)="searchCourses()">
+            <option *ngFor="let s of sortOptions" [value]="s.value">{{ s.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filters__actions">
+        <button type="button" class="btn btn-primary btn-sm" (click)="searchCourses()">
+          Buscar
+        </button>
+        <button type="button" class="btn btn-ghost btn-sm" (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      </div>
+    </section>
+
+    <!-- Cargando -->
+    <div class="state" *ngIf="loading">
+      <span class="node-loader" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+      <p>Cargando cursos…</p>
+    </div>
+
+    <!-- Error -->
+    <div class="state" *ngIf="!loading && errorMessage">
+      <span class="state-icon" aria-hidden="true">⚠</span>
+      <h3>No pudimos cargar los cursos</h3>
+      <p>{{ errorMessage }}</p>
+      <button type="button" class="btn btn-primary" (click)="searchCourses()">
+        Reintentar
+      </button>
+    </div>
+
+    <!-- Resultados -->
+    <ng-container *ngIf="!loading && !errorMessage">
+      <div class="card-grid card-grid--4" *ngIf="courses.length > 0">
+        <article class="glass glass-hover glass-sheen course-card"
+                 *ngFor="let course of courses"
+                 (click)="viewCourse(course.slug)"
+                 (keyup.enter)="viewCourse(course.slug)"
+                 tabindex="0"
+                 role="link"
+                 [attr.aria-label]="'Ver curso ' + course.title">
+
+          <div class="course-card__thumb">
+            <img src="assets/Logo.png" alt="" aria-hidden="true" />
+            <span class="course-card__price"
+                  [class.course-card__price--free]="course.price === 0">
+              {{ course.price === 0 ? 'Gratis' : formatPrice(course.price) }}
+            </span>
+          </div>
+
+          <div class="row">
+            <span class="badge badge--neutral">{{ getLevelLabel(course.level) }}</span>
+            <span class="badge" *ngIf="course.category">{{ course.category }}</span>
+          </div>
+
+          <h3 class="course-card__title clamp-2">{{ course.title }}</h3>
+          <p class="course-card__desc clamp-2">{{ course.description }}</p>
+
+          <p class="course-card__mentor">
+            <span class="avatar avatar--sm">{{ getInitial(course.mentor?.name) }}</span>
+            <span>{{ course.mentor?.name || 'Mentor' }}</span>
+          </p>
+
+          <footer class="course-card__foot">
+            <span title="Inscritos">{{ course.enrolledCount || 0 }} inscritos</span>
+            <span title="Valoración">★ {{ (course.rating || 0).toFixed(1) }}</span>
+            <span title="Lecciones">{{ course.totalLessons || 0 }} lecciones</span>
+          </footer>
+        </article>
+      </div>
+
+      <!-- Sin resultados -->
+      <div class="state" *ngIf="courses.length === 0">
+        <span class="state-icon" aria-hidden="true">◎</span>
+        <h3>No se encontraron cursos</h3>
+        <p>Prueba con otra búsqueda o quita algunos filtros.</p>
+        <button type="button" class="btn btn-ghost" (click)="clearFilters()">
+          Limpiar filtros
+        </button>
+      </div>
+
+      <!-- Paginación -->
+      <nav class="pager" *ngIf="pagination && pagination.pages > 1" aria-label="Paginación">
+        <button type="button"
+                class="btn btn-ghost btn-sm"
+                [disabled]="pagination.page <= 1"
+                (click)="goToPage(pagination.page - 1)">
+          ← Anterior
+        </button>
+
+        <span class="pager__info">
+          Página {{ pagination.page }} de {{ pagination.pages }}
+        </span>
+
+        <button type="button"
+                class="btn btn-ghost btn-sm"
+                [disabled]="pagination.page >= pagination.pages"
+                (click)="goToPage(pagination.page + 1)">
+          Siguiente →
+        </button>
+      </nav>
+    </ng-container>
+
+  </div>
+</div>

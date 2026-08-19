@@ -1,0 +1,40 @@
+# ========================
+# Documentación Markdown
+# ========================
+# Evita que se agreguen NUEVOS .md al repositorio.
+# Los .md que ya están versionados no se ven afectados por esta regla
+# (git ignora .gitignore para archivos que ya están en el índice):
+#   INICIO-RAPIDO.md, PROYECTO.md, README.md, RESUMEN-REVISION.md,
+#   ROADMAP-TECNICO.md, SEGURIDAD.md, TEST-API.md,
+#   frontend/DESIGN-SYSTEM.md, frontend/README.md
+# Esos siguen versionados a propósito, para publicarlos actualizados
+# cuando el proyecto esté terminado.
+*.md
+
+# ========================
+# Dependencias
+# ========================
+node_modules/
+
+# ========================
+# Variables de entorno
+# ========================
+.env
+.env.local
+.env.*.local
+
+# ========================
+# Logs
+# ========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# Sistema operativo
+# ========================
+.DS_Store
+Thumbs.db
+desktop.ini

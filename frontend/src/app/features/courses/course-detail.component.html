@@ -1,0 +1,158 @@
+<div class="page">
+  <div class="container">
+
+    <!-- Cargando -->
+    <div class="state" *ngIf="loading">
+      <span class="node-loader" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+      <p>Cargando curso…</p>
+    </div>
+
+    <!-- No encontrado -->
+    <div class="state" *ngIf="!loading && !course">
+      <span class="state-icon" aria-hidden="true">◎</span>
+      <h3>Curso no encontrado</h3>
+      <p>Puede que el enlace haya cambiado o el curso ya no esté disponible.</p>
+      <a class="btn btn-primary" routerLink="/courses">Ver todos los cursos</a>
+    </div>
+
+    <ng-container *ngIf="!loading && course">
+
+      <!-- ===== Cabecera ===== -->
+      <div class="detail-top anim-up">
+        <div>
+          <div class="row">
+            <span class="badge">{{ getCategoryLabel(course.category) }}</span>
+            <span class="badge badge--neutral">{{ getLevelLabel(course.level) }}</span>
+          </div>
+
+          <h1 class="detail-title">{{ course.title }}</h1>
+          <p class="detail-desc">{{ course.description }}</p>
+
+          <dl class="detail-meta">
+            <div class="meta-item">
+              <dt>Mentor</dt>
+              <dd class="text-accent">{{ course.mentor?.name || 'Por asignar' }}</dd>
+            </div>
+            <div class="meta-item">
+              <dt>Estudiantes</dt>
+              <dd>{{ course.enrolledCount || 0 }}</dd>
+            </div>
+            <div class="meta-item">
+              <dt>Valoración</dt>
+              <dd>★ {{ (course.rating || 0).toFixed(1) }} ({{ course.reviewCount || 0 }})</dd>
+            </div>
+            <div class="meta-item">
+              <dt>Duración</dt>
+              <dd>{{ formatDuration(course.totalDuration || 0) }}</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Tarjeta de inscripción -->
+        <aside class="glass enroll-card">
+          <div class="enroll-card__thumb">
+            <img src="assets/Logo.png" alt="" aria-hidden="true" />
+          </div>
+
+          <p class="enroll-card__price">
+            {{ course.price === 0 ? 'Gratis' : formatPrice(course.price) }}
+          </p>
+
+          <div class="form-note" *ngIf="isEnrolled">
+            Ya estás inscrito en este curso
+          </div>
+
+          <button type="button"
+                  class="btn btn-primary btn-lg btn-block"
+                  *ngIf="!isEnrolled"
+                  [disabled]="enrolling"
+                  (click)="enroll()">
+            <span class="spinner" *ngIf="enrolling" aria-hidden="true"></span>
+            {{ enrolling ? 'Inscribiendo…' : 'Inscribirme ahora' }}
+          </button>
+
+          <a class="btn btn-ghost btn-lg btn-block"
+             *ngIf="isEnrolled"
+             [routerLink]="['/courses', course.slug, 'play']">
+            Continuar aprendiendo
+          </a>
+
+          <ul class="enroll-card__perks">
+            <li>{{ course.totalLessons || 0 }} lecciones</li>
+            <li>Acceso a la comunidad del curso</li>
+            <li>Bot mentor disponible 24/7</li>
+          </ul>
+        </aside>
+      </div>
+
+      <!-- ===== Lo que aprenderás ===== -->
+      <section class="glass detail-block anim-up anim-d1"
+               *ngIf="course.whatYouWillLearn?.length">
+        <h2>Lo que aprenderás</h2>
+        <ul class="learn-grid">
+          <li *ngFor="let item of course.whatYouWillLearn">
+            <span class="learn-check" aria-hidden="true">✓</span>
+            <span>{{ item }}</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ===== Requisitos ===== -->
+      <section class="glass detail-block anim-up anim-d1"
+               *ngIf="course.requirements?.length">
+        <h2>Requisitos</h2>
+        <ul class="req-list">
+          <li *ngFor="let req of course.requirements">
+            <span class="req-mark" aria-hidden="true">▹</span>
+            <span>{{ req }}</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ===== Contenido ===== -->
+      <section class="glass detail-block anim-up anim-d2">
+        <h2>Contenido del curso</h2>
+        <p class="detail-block__sub">
+          {{ course.modules?.length || 0 }} módulos ·
+          {{ course.totalLessons || 0 }} lecciones ·
+          {{ formatDuration(course.totalDuration || 0) }}
+        </p>
+
+        <div class="modules">
+          <article class="module" *ngFor="let module of course.modules; let i = index">
+            <button type="button"
+                    class="module__head"
+                    [attr.aria-expanded]="expandedModules[i]"
+                    (click)="toggleModule(i)">
+              <span class="module__info">
+                <span class="module__title">Módulo {{ i + 1 }}: {{ module.title }}</span>
+                <span class="module__meta">
+                  {{ module.lessons?.length || 0 }} lecciones · {{ getModuleDuration(module) }}
+                </span>
+              </span>
+              <span class="module__chevron" [class.module__chevron--open]="expandedModules[i]" aria-hidden="true">
+                ▾
+              </span>
+            </button>
+
+            <ul class="lessons" *ngIf="expandedModules[i]">
+              <li class="lesson" *ngFor="let lesson of module.lessons">
+                <span class="lesson__icon" aria-hidden="true">{{ getLessonIcon(lesson.type) }}</span>
+                <span class="lesson__info">
+                  <span class="lesson__title">{{ lesson.title }}</span>
+                  <span class="lesson__type">{{ getLessonTypeLabel(lesson.type) }}</span>
+                </span>
+                <span class="lesson__duration" *ngIf="lesson.duration">
+                  {{ formatDuration(lesson.duration) }}
+                </span>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+    </ng-container>
+  </div>
+</div>

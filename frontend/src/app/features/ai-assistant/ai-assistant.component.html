@@ -1,0 +1,60 @@
+<section class="glass glass--console bot">
+
+  <!-- Encabezado tipo panel de control -->
+  <header class="bot__head">
+    <div class="bot__id">
+      <span class="bot__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <div>
+        <h3 class="bot__title">Mentor AI</h3>
+        <p class="bot__status">
+          <span class="dot-live"></span>
+          Groq · GPT-OSS 20B
+        </p>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-ghost btn-sm" (click)="clearChat()">
+      Limpiar
+    </button>
+  </header>
+
+  <!-- Conversación -->
+  <div class="bot__scroll" #scrollContainer>
+    <div class="bot-msg"
+         *ngFor="let msg of messages"
+         [class.bot-msg--mine]="msg.sender === 'user'">
+      <div class="bot-msg__bubble">
+        <span class="bot-msg__author">
+          {{ msg.sender === 'user' ? 'Tú' : 'Mentor AI' }}
+        </span>
+        <div class="bot-msg__body" [innerHTML]="msg.text | markdown"></div>
+      </div>
+    </div>
+
+    <!-- Pensando -->
+    <div class="bot-msg" *ngIf="loading">
+      <div class="bot-msg__bubble">
+        <span class="bot-msg__author">Mentor AI</span>
+        <span class="node-loader" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Composer -->
+  <form class="bot__composer" (ngSubmit)="sendPrompt()">
+    <input
+      type="text"
+      class="input"
+      name="prompt"
+      autocomplete="off"
+      placeholder="Pregunta sobre código, arquitectura o un error…"
+      [(ngModel)]="prompt"
+      [disabled]="loading"
+    />
+    <button type="submit" class="btn btn-primary" [disabled]="loading || !prompt.trim()">
+      Preguntar
+    </button>
+  </form>
+</section>

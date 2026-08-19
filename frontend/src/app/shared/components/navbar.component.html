@@ -1,0 +1,86 @@
+<div class="nav-shell">
+  <nav class="nav-pill" [class.nav-pill--scrolled]="isScrolled">
+
+    <!-- Marca -->
+    <a class="brand" routerLink="/" (click)="closeMenu()" aria-label="MentorSync AI — Inicio">
+      <img class="brand__mark" src="assets/Logo.png" alt="" aria-hidden="true" />
+      <span class="brand__text">MentorSync<span>&nbsp;AI</span></span>
+    </a>
+
+    <!-- Enlaces (desktop) -->
+    <ul class="nav-links only-desktop">
+      <li *ngFor="let link of navLinks">
+        <a [routerLink]="link.path"
+           [fragment]="link.fragment"
+           routerLinkActive="is-active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          {{ link.label }}
+        </a>
+      </li>
+      <li *ngIf="isLoggedIn">
+        <a routerLink="/dashboard" routerLinkActive="is-active">Dashboard</a>
+      </li>
+    </ul>
+
+    <!-- Acciones -->
+    <div class="nav-actions">
+      <ng-container *ngIf="!isLoggedIn">
+        <a class="btn btn-ghost btn-sm only-desktop" routerLink="/login">Iniciar sesión</a>
+        <a class="btn btn-primary btn-sm" routerLink="/register">Crear cuenta</a>
+      </ng-container>
+
+      <ng-container *ngIf="isLoggedIn">
+        <div class="user-chip only-desktop">
+          <span class="avatar avatar--sm">{{ userInitial }}</span>
+          <span class="user-chip__name">{{ userName }}</span>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" (click)="logout()">Salir</button>
+      </ng-container>
+
+      <!-- Hamburguesa -->
+      <button type="button"
+              class="burger only-mobile"
+              [class.burger--open]="isMenuOpen"
+              (click)="toggleMenu()"
+              [attr.aria-expanded]="isMenuOpen"
+              aria-controls="mobile-menu"
+              aria-label="Menú de navegación">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</div>
+
+<!-- Panel móvil -->
+<div class="mobile-backdrop" *ngIf="isMenuOpen" (click)="closeMenu()"></div>
+
+<aside id="mobile-menu"
+       class="mobile-menu glass"
+       [class.mobile-menu--open]="isMenuOpen"
+       [attr.aria-hidden]="!isMenuOpen">
+  <ul class="mobile-menu__links">
+    <li *ngFor="let link of navLinks">
+      <a [routerLink]="link.path" [fragment]="link.fragment" (click)="closeMenu()">
+        {{ link.label }}
+      </a>
+    </li>
+    <li *ngIf="isLoggedIn">
+      <a routerLink="/dashboard" (click)="closeMenu()">Dashboard</a>
+    </li>
+  </ul>
+
+  <div class="mobile-menu__foot">
+    <ng-container *ngIf="!isLoggedIn">
+      <a class="btn btn-ghost btn-block" routerLink="/login" (click)="closeMenu()">Iniciar sesión</a>
+      <a class="btn btn-primary btn-block" routerLink="/register" (click)="closeMenu()">Crear cuenta</a>
+    </ng-container>
+
+    <ng-container *ngIf="isLoggedIn">
+      <div class="user-chip user-chip--block">
+        <span class="avatar avatar--sm">{{ userInitial }}</span>
+        <span class="user-chip__name">{{ userName }}</span>
+      </div>
+      <button type="button" class="btn btn-danger btn-block" (click)="logout()">Cerrar sesión</button>
+    </ng-container>
+  </div>
+</aside>

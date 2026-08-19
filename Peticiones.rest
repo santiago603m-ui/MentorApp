@@ -1,0 +1,70 @@
+@baseUrl = http://localhost:5000
+
+# Variable global para reutilizar el token JWT tras hacer login
+@authToken = TU_TOKEN_AQUI
+
+### ==========================================
+### 1. AUTENTICACIÓN (/api/auth)
+### ==========================================
+
+### Registrar un nuevo usuario
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Juan Pérez",
+  "email": "juan@ejemplo.com",
+  "password": "password123",
+  "role": "student"
+}
+
+###
+### Iniciar sesión (Obtiene el token JWT)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "juan@ejemplo.com",
+  "password": "password123"
+}
+
+
+### ==========================================
+### 2. INTELIGENCIA ARTIFICIAL / CHAT IA (/api/ai)
+### ==========================================
+
+### Enviar historial de mensajes al mentor de IA (Groq)
+POST {{baseUrl}}/api/ai/chat
+Content-Type: application/json
+
+{
+  "messages": [
+    {
+      "sender": "user",
+      "text": "Hola, tengo un error en Angular con un tipo de dato y no sé cómo resolverlo."
+    }
+  ]
+}
+
+
+### ==========================================
+### 3. MENSAJES DE CHAT (/api/messages)
+### ==========================================
+
+### Obtener mensajes históricos de una sala específica
+GET {{baseUrl}}/api/messages/sala-123
+Content-Type: application/json
+
+
+### ==========================================
+### 4. BOT Y DOCUMENTOS (/api/bot o rutas protegidas)
+### ==========================================
+
+### Consultar al bot de documentos (Requiere autenticación)
+POST {{baseUrl}}/api/bot/query
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "question": "¿Cuáles son las pautas principales del curso?"
+}

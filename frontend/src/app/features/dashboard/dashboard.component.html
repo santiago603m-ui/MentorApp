@@ -1,0 +1,45 @@
+<div class="page">
+  <div class="container container--narrow">
+
+    <!-- Encabezado -->
+    <header class="glass dash-head anim-up">
+      <div class="dash-head__id">
+        <span class="avatar avatar--lg">{{ userInitial }}</span>
+        <div>
+          <h1 class="dash-head__title">Hola, {{ userName }}</h1>
+          <p class="dash-head__sub">Tu espacio de aprendizaje</p>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-danger btn-sm" (click)="logout()">
+        Cerrar sesión
+      </button>
+    </header>
+
+    <!-- Pestañas -->
+    <div class="glass tabs anim-up anim-d1" role="tablist" aria-label="Vistas del panel">
+      <button *ngFor="let tab of tabs"
+              type="button"
+              class="tab"
+              [class.tab--active]="activeTab === tab.id"
+              role="tab"
+              [attr.aria-selected]="activeTab === tab.id"
+              (click)="activeTab = tab.id">
+        <span class="tab__icon" aria-hidden="true">{{ tab.icon }}</span>
+        <span>{{ tab.label }}</span>
+      </button>
+    </div>
+
+    <!-- Contenido -->
+    <main class="dash-panel anim-up anim-d2">
+      <div [hidden]="activeTab !== 'chat'">
+        <app-chat></app-chat>
+      </div>
+
+      <div [hidden]="activeTab !== 'ai'">
+        <app-ai-assistant></app-ai-assistant>
+      </div>
+    </main>
+
+  </div>
+</div>

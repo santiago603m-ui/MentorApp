@@ -1,0 +1,93 @@
+<section class="glass chat">
+
+  <!-- Encabezado -->
+  <header class="chat__head">
+    <div class="chat__id">
+      <h2 class="chat__title">{{ roomTitle }}</h2>
+
+      <p class="chat__typing" *ngIf="typingUser">
+        <span class="node-loader" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        {{ typingUser }} está escribiendo…
+      </p>
+    </div>
+
+    <div class="chat__presence">
+      <!-- Estado de conexión -->
+      <span class="badge"
+            [class.badge--success]="connectionState === 'connected'"
+            [class.badge--live]="connectionState === 'error' || connectionState === 'disconnected'"
+            [class.badge--neutral]="connectionState === 'connecting' || connectionState === 'idle'">
+        <span class="dot-live"
+              [class.dot-live--red]="connectionState === 'error' || connectionState === 'disconnected'"></span>
+        {{ connectionLabel }}
+      </span>
+
+      <!-- Usuarios en línea -->
+      <span class="badge badge--marine"
+            [title]="onlineNames"
+            *ngIf="onlineUsers.length">
+        {{ onlineUsers.length }} en línea
+      </span>
+    </div>
+  </header>
+
+  <!-- Aviso de error -->
+  <div class="chat__alert" *ngIf="errorMessage">
+    <p class="form-error">
+      {{ errorMessage }}
+      <button type="button" class="chat__retry" (click)="reload()">Reintentar</button>
+    </p>
+  </div>
+
+  <!-- Mensajes -->
+  <div class="chat__scroll" #scrollContainer>
+    <!-- Cargando historial -->
+    <div class="state" *ngIf="loadingHistory">
+      <span class="node-loader" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+      <p>Cargando mensajes…</p>
+    </div>
+
+    <!-- Vacío -->
+    <div class="state" *ngIf="!loadingHistory && messages.length === 0">
+      <span class="state-icon" aria-hidden="true">💬</span>
+      <p>Todavía no hay mensajes. Rompe el hielo.</p>
+    </div>
+
+    <div class="msg"
+         *ngFor="let msg of messages; trackBy: trackMessage"
+         [class.msg--mine]="isMyMessage(msg.sender)">
+      <div class="msg__bubble">
+        <div class="msg__meta">
+          <span class="msg__author">{{ getSenderName(msg) }}</span>
+          <span class="msg__time" *ngIf="msg.createdAt">
+            {{ msg.createdAt | date:'HH:mm' }}
+          </span>
+        </div>
+        <p class="msg__text">{{ msg.content }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Composer -->
+  <form class="chat__composer" (ngSubmit)="sendMessage()">
+    <input
+      type="text"
+      class="input"
+      name="newMessage"
+      autocomplete="off"
+      maxlength="2000"
+      placeholder="Escribe un mensaje…"
+      [(ngModel)]="newMessage"
+      (input)="onInputChange()"
+    />
+    <button type="submit"
+            class="btn btn-primary"
+            [disabled]="!newMessage.trim() || connectionState !== 'connected'">
+      Enviar
+    </button>
+  </form>
+</section>

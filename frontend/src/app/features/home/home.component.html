@@ -1,0 +1,193 @@
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="eyebrow anim-up">
+      <span class="dot-live"></span>
+      Clases en vivo · Bot mentor con IA · Comunidad
+    </div>
+
+    <img class="hero__logo anim-up anim-d1" src="assets/Logo.png" alt="MentorSync AI" />
+
+    <h1 class="anim-up anim-d1">
+      Aprende a programar con
+      <span class="text-gradient">mentores reales</span>, sin pausas.
+    </h1>
+
+    <p class="hero__sub anim-up anim-d2">
+      Clases en vivo, un asistente con la personalidad de tu mentor que responde cuando
+      él no puede, y una comunidad activa de gente construyendo lo mismo que tú.
+    </p>
+
+    <div class="hero__actions anim-up anim-d3">
+      <a class="btn btn-primary btn-lg" routerLink="/register">Empezar gratis</a>
+      <a class="btn btn-ghost btn-lg" routerLink="/courses">Explorar cursos →</a>
+    </div>
+
+    <div class="glass hero__stats anim-up anim-d4">
+      <div class="stat" *ngFor="let stat of stats">
+        <span class="stat__num">{{ stat.num }}</span>
+        <span class="stat__label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EN VIVO ================= -->
+<section id="vivo" class="section section--tight">
+  <div class="container">
+    <div class="glass glass--halo live-banner">
+      <div class="live-banner__info">
+        <span class="pulse-ring"></span>
+        <div>
+          <h3 class="live-banner__title">{{ liveClass.title }}</h3>
+          <p class="live-banner__meta">
+            Con {{ liveClass.mentor }} · {{ liveClass.viewers }} conectados ahora
+          </p>
+        </div>
+      </div>
+      <a class="btn btn-primary" routerLink="/login">Unirme en vivo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CURSOS ================= -->
+<section id="cursos" class="section">
+  <div class="container">
+    <header class="section-head">
+      <span class="kicker">Catálogo</span>
+      <h2>Rutas diseñadas por mentores en activo</h2>
+      <p>Contenido en vivo, grabado y ejercicios prácticos, organizados por nivel.</p>
+    </header>
+
+    <div class="card-grid">
+      <article class="glass glass-hover glass-sheen course-card"
+               *ngFor="let course of courses"
+               tabindex="0"
+               [routerLink]="['/courses']">
+        <div class="course-card__thumb">
+          <img src="assets/Logo.png" alt="" aria-hidden="true" />
+        </div>
+
+        <div class="row">
+          <span class="badge" [class.badge--live]="course.isLive">
+            {{ course.isLive ? 'En vivo' : 'Grabado' }}
+          </span>
+          <span class="badge badge--neutral">{{ course.level }}</span>
+        </div>
+
+        <h3 class="course-card__title">{{ course.title }}</h3>
+        <p class="course-card__desc clamp-2">{{ course.description }}</p>
+
+        <footer class="course-card__foot">
+          <span class="row">
+            <span class="avatar avatar--sm">{{ course.mentor.charAt(0) }}</span>
+            {{ course.mentor }}
+          </span>
+          <span>{{ course.sessions }} sesiones</span>
+        </footer>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BOT MENTOR ================= -->
+<section id="bot" class="section">
+  <div class="container bot-layout">
+    <div>
+      <header class="section-head section-head--left">
+        <span class="kicker">Bot mentor</span>
+        <h2>Cuando tu mentor no está, su bot sí.</h2>
+      </header>
+
+      <ul class="stack stack-4">
+        <li class="bot-feature" *ngFor="let feature of botFeatures">
+          <span class="bot-feature__icon" aria-hidden="true">{{ feature.icon }}</span>
+          <div>
+            <h4>{{ feature.title }}</h4>
+            <p>{{ feature.description }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Consola del bot -->
+    <div class="glass glass--console bot-console">
+      <header class="bot-console__top">
+        <span class="bot-console__dots" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </span>
+        <span class="bot-console__status">
+          <span class="dot-live"></span>
+          Bot de {{ liveClass.mentor }} · activo
+        </span>
+      </header>
+
+      <div class="stack stack-3">
+        <div class="chat-line" *ngFor="let message of chatMessages">
+          <span class="chat-avatar" [class.chat-avatar--bot]="message.isBot">
+            {{ message.isBot ? 'AI' : 'TÚ' }}
+          </span>
+          <div class="chat-bubble">
+            <strong *ngIf="message.author">{{ message.author }}</strong>
+            {{ message.text }}
+          </div>
+        </div>
+
+        <div class="chat-line" *ngIf="isTyping">
+          <span class="chat-avatar chat-avatar--bot">AI</span>
+          <div class="chat-bubble chat-bubble--typing">
+            <span class="node-loader">
+              <span></span><span></span><span></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMUNIDAD ================= -->
+<section id="comunidad" class="section">
+  <div class="container">
+    <header class="section-head">
+      <span class="kicker">Comunidad</span>
+      <h2>Aprende acompañado, no solo</h2>
+      <p>Foros por curso, chat en tiempo real y mentoría entre pares.</p>
+    </header>
+
+    <div class="scroll-x">
+      <article class="glass glass-hover comm-card" *ngFor="let group of communityGroups">
+        <div class="avatar-stack" aria-hidden="true">
+          <span class="avatar"></span>
+          <span class="avatar"></span>
+          <span class="avatar"></span>
+        </div>
+        <h4>{{ group.name }}</h4>
+        <p>{{ group.members }} miembros · {{ group.online }} en línea</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA FINAL ================= -->
+<section class="section">
+  <div class="container">
+    <div class="glass glass--halo cta">
+      <h2>Tu próxima clase en vivo empieza pronto</h2>
+      <p>Crea tu cuenta gratis y únete a la sesión de hoy.</p>
+      <a class="btn btn-primary btn-lg" routerLink="/register">Crear cuenta gratis</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <span>© {{ year }} MentorSync AI</span>
+    <nav class="site-footer__links">
+      <a routerLink="/courses">Cursos</a>
+      <a routerLink="/login">Iniciar sesión</a>
+      <a routerLink="/register">Crear cuenta</a>
+    </nav>
+  </div>
+</footer>

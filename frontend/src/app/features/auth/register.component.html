@@ -1,0 +1,89 @@
+<div class="auth-shell">
+  <div class="glass auth-card anim-up">
+
+    <header class="auth-head">
+      <div class="auth-logo">
+        <img src="assets/Logo.png" alt="MentorSync AI" />
+      </div>
+      <h1 class="auth-title">Crea tu cuenta</h1>
+      <p class="auth-sub">Únete a la comunidad de MentorSync AI</p>
+    </header>
+
+    <form class="auth-form" (ngSubmit)="onRegister()" #registerForm="ngForm" novalidate>
+      <div class="field">
+        <label class="label" for="name">Nombre completo</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="input"
+          autocomplete="name"
+          placeholder="Tu nombre"
+          [(ngModel)]="userData.name"
+          [disabled]="isLoading"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="email">Correo electrónico</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          class="input"
+          autocomplete="email"
+          placeholder="tu@correo.com"
+          [(ngModel)]="userData.email"
+          [disabled]="isLoading"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="password">Contraseña</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          class="input"
+          autocomplete="new-password"
+          placeholder="Mínimo 6 caracteres"
+          minlength="6"
+          [(ngModel)]="userData.password"
+          [disabled]="isLoading"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label class="label" for="role">¿Cómo vas a usar la plataforma?</label>
+        <select
+          id="role"
+          name="role"
+          class="select"
+          [(ngModel)]="userData.role"
+          [disabled]="isLoading"
+        >
+          <option value="student">Aprendiz / Estudiante</option>
+          <option value="mentor">Mentor</option>
+        </select>
+      </div>
+
+      <p class="form-error" *ngIf="errorMessage" role="alert">
+        {{ errorMessage }}
+      </p>
+
+      <button type="submit"
+              class="btn btn-primary btn-lg btn-block"
+              [disabled]="isLoading || registerForm.invalid">
+        <span class="spinner" *ngIf="isLoading" aria-hidden="true"></span>
+        {{ isLoading ? 'Creando cuenta…' : 'Crear cuenta' }}
+      </button>
+    </form>
+
+    <p class="auth-foot">
+      ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+    </p>
+  </div>
+</div>
