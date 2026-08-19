@@ -17,8 +17,9 @@ export interface SocketIdentity {
     role: string;
 }
 
-export type ConnectionState = 'idle' | 'connecting' | 'connected' | 'disconnected' | 'error';
-
+export type ConnectionState = 'idle' | 'connecting' | 'connected' | 'disconnected'
+ | 'error';
+const TUNNEL_HOSTS: string[] = ['loca.lt', 'ngrok-free.app', 'trycloudflare.com'];
 @Injectable({
     providedIn: 'root'
 })
